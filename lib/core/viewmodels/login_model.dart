@@ -18,7 +18,7 @@ class LoginModel extends BaseModel {
     errorMessage = null;
     setState(ViewState.Busy);
 
-    if (token == null) {
+    if (token == null || token == '') {
       errorMessage = 'Token is required';
       setState(ViewState.Idle);
       return false;
@@ -31,10 +31,10 @@ class LoginModel extends BaseModel {
       prefs.setString(FORGE_TOKEN_KEY, token);
     } else {
       errorMessage = 'Token is invalid';
-
-      setState(ViewState.Idle);
-      return success;
     }
+
+    setState(ViewState.Idle);
+    return success;
   }
 
   Future<bool> checkAuth() async {
