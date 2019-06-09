@@ -3,7 +3,7 @@ import 'package:laravel_forge/ui/views/recipes_view.dart';
 import 'package:laravel_forge/ui/views/servers_view.dart';
 import 'package:laravel_forge/ui/views/settings_view.dart';
 
-int _currentIndex = 0;
+int currentIndex = 0;
 
 class MainView extends StatefulWidget {
   @override
@@ -12,7 +12,7 @@ class MainView extends StatefulWidget {
 
 class _ServersViewState extends State<MainView> {
   get _tabName {
-    switch (_currentIndex) {
+    switch (currentIndex) {
       case 0:
         return 'Servers';
       case 1:
@@ -23,7 +23,7 @@ class _ServersViewState extends State<MainView> {
   }
 
   get _getPage {
-    switch (_currentIndex) {
+    switch (currentIndex) {
       case 0:
         return ServersView();
       case 1:
@@ -37,6 +37,7 @@ class _ServersViewState extends State<MainView> {
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: new AppBar(
+        automaticallyImplyLeading: false,
         title: new Text(
           "Laravel Forge - $_tabName",
           style: new TextStyle(color: Colors.white),
@@ -46,10 +47,10 @@ class _ServersViewState extends State<MainView> {
       bottomNavigationBar: BottomNavigationBar(
         onTap: (i) {
           setState(() {
-            _currentIndex = i;
+            currentIndex = i;
           });
         },
-        currentIndex: _currentIndex,
+        currentIndex: currentIndex,
         items: [
           BottomNavigationBarItem(
             icon: new Icon(Icons.dashboard),

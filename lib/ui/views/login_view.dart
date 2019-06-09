@@ -50,8 +50,10 @@ class _LoginViewState extends State<LoginView> {
                                 var loginSuccess =
                                     await model.login(_controller.text);
                                 if (loginSuccess) {
-                                  Navigator.of(context, rootNavigator: true)
-                                      .pushReplacementNamed(Routes.home);
+                                  Navigator.pushReplacementNamed(
+                                    context,
+                                    Routes.home,
+                                  );
                                 }
                               },
                             )

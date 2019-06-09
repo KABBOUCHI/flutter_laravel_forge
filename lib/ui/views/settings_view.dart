@@ -5,6 +5,7 @@ import 'package:laravel_forge/ui/shared/ui_helpers.dart';
 
 import '../router.dart';
 import 'base_view.dart';
+import 'main_view.dart';
 
 class SettingsView extends StatefulWidget {
   @override
@@ -32,6 +33,7 @@ class _SettingsViewState extends State<SettingsView> {
                   ),
                   onPressed: () async {
                     await model.logout();
+                    currentIndex = 0;
                     Navigator.of(context, rootNavigator: true)
                         .pushReplacementNamed(Routes.login);
                   },

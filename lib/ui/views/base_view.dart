@@ -27,8 +27,8 @@ class _BaseViewState<T extends BaseModel> extends State<BaseView<T>> {
 
   @override
   void dispose() {
-    model.dispose();
     super.dispose();
+    // model.dispose();
   }
 
   @override
