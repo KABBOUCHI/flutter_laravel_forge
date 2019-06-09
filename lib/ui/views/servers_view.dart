@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:laravel_forge/core/enums/viewsate.dart';
 import 'package:laravel_forge/core/models/server.dart';
 import 'package:laravel_forge/core/viewmodels/servers_model.dart';
+import 'package:laravel_forge/ui/shared/loading_indicator.dart';
 
 import 'base_view.dart';
 
@@ -16,9 +17,7 @@ class _ServersViewState extends State<ServersView> {
     return BaseView<ServersModel>(
       onModelReady: (model) => model.getServers(),
       builder: (context, model, child) => model.state == ViewState.Busy
-          ? Center(
-              child: CircularProgressIndicator(),
-            )
+          ? loadingIndicator()
           : ListView(
               children: List.generate(
                 model.servers.length,

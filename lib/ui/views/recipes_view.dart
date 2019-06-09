@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:laravel_forge/core/enums/viewsate.dart';
 import 'package:laravel_forge/core/viewmodels/recipes_model.dart';
+import 'package:laravel_forge/ui/shared/loading_indicator.dart';
 
 import 'base_view.dart';
 
@@ -15,9 +16,7 @@ class _RecipesViewState extends State<RecepiesView> {
     return BaseView<RecipesModel>(
       onModelReady: (model) => model.getRecipes(),
       builder: (context, model, child) => model.state == ViewState.Busy
-          ? Center(
-              child: CircularProgressIndicator(),
-            )
+          ? loadingIndicator()
           : ListView(
               children: List.generate(
                 model.recipes.length,

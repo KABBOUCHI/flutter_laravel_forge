@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:laravel_forge/core/enums/viewsate.dart';
 import 'package:laravel_forge/core/viewmodels/login_model.dart';
 import 'package:laravel_forge/ui/shared/app_colors.dart';
+import 'package:laravel_forge/ui/shared/loading_indicator.dart';
 import 'package:laravel_forge/ui/widgets/login_header.dart';
 import '../router.dart';
 import 'base_view.dart';
@@ -29,9 +30,7 @@ class _LoginViewState extends State<LoginView> {
       builder: (context, model, child) => Scaffold(
             backgroundColor: backgroundColor,
             body: model.state == ViewState.Busy || changingRouteOnStart == true
-                ? Center(
-                    child: CircularProgressIndicator(),
-                  )
+                ? loadingIndicator()
                 : Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
@@ -39,7 +38,7 @@ class _LoginViewState extends State<LoginView> {
                           validationMessage: model.errorMessage,
                           controller: _controller),
                       model.state == ViewState.Busy
-                          ? CircularProgressIndicator()
+                          ? loadingIndicator()
                           : FlatButton(
                               color: Colors.green,
                               child: Text(
