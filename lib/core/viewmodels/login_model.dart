@@ -23,10 +23,11 @@ class LoginModel extends BaseModel {
       setState(ViewState.Idle);
       return false;
     }
+    bool success = false;
 
-    var success = await _authenticationService.login(token);
+    success = await _authenticationService.login(token);
 
-    if (success) {
+    if (success == true) {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.setString(FORGE_TOKEN_KEY, token);
     } else {

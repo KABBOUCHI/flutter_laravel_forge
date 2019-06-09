@@ -3,6 +3,7 @@ import 'package:laravel_forge/core/enums/viewsate.dart';
 import 'package:laravel_forge/core/viewmodels/settings_model.dart';
 import 'package:laravel_forge/ui/shared/ui_helpers.dart';
 
+import '../router.dart';
 import 'base_view.dart';
 
 class SettingsView extends StatefulWidget {
@@ -31,7 +32,8 @@ class _SettingsViewState extends State<SettingsView> {
                   ),
                   onPressed: () async {
                     await model.logout();
-                    Navigator.pushReplacementNamed(context, 'login');
+                    Navigator.of(context, rootNavigator: true)
+                        .pushReplacementNamed('login');
                   },
                 )
               ],

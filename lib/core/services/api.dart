@@ -2,48 +2,47 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:http/http.dart' as http;
+import 'package:dio/dio.dart';
 import 'package:laravel_forge/core/models/recipe.dart';
 import 'package:laravel_forge/core/models/server.dart';
 import 'package:laravel_forge/core/models/user.dart';
+import 'package:laravel_forge/locator.dart';
 
 /// The service responsible for networking requests
 class Api {
   static const endpoint = 'https://forge.laravel.com/api/v1';
-  String token;
+  Dio dio = locator<Dio>();
 
-  var client = new http.Client();
+  String token;
 
   Future<User> getUserProfile(String token) async {
     this.token = token;
 
-    var response = await client.get(
-      '$endpoint/user',
-      headers: {
-        HttpHeaders.acceptHeader: "application/json",
+    var request = new Dio()
+      ..options.headers = {
+        'Content-Type': 'application/json; charset=utf-8',
+        'Accept': 'application/json',
         HttpHeaders.authorizationHeader: "Bearer $token",
-      },
-    );
+      };
+    var response;
 
-    if (response.statusCode != 200) return null;
+    try {
+      response = await request.get('$endpoint/user');
+    } catch (e) {
+      return null;
+    }
 
-    return User.fromJson(json.decode(response.body)['user']);
+    return User.fromJson(response.data['user']);
   }
 
   Future<List<Server>> getServers() async {
     var servers = List<Server>();
 
-    var response = await client.get(
-      '$endpoint/servers',
-      headers: {
-        HttpHeaders.acceptHeader: "application/json",
-        HttpHeaders.authorizationHeader: "Bearer $token",
-      },
-    );
+    var response = await dio.get('$endpoint/servers');
 
     if (response.statusCode != 200) return null;
 
-    var parsed = json.decode(response.body)['servers'] as List<dynamic>;
+    var parsed = response.data['servers'] as List<dynamic>;
 
     for (var server in parsed) {
       servers.add(Server.fromJson(server));
@@ -55,19 +54,11 @@ class Api {
   Future<List<Recipe>> getRecipes() async {
     var recipes = List<Recipe>();
 
-    var response = await client.get(
-      '$endpoint/recipes',
-      headers: {
-        HttpHeaders.acceptHeader: "application/json",
-        HttpHeaders.authorizationHeader: "Bearer $token",
-      },
-    );
+    var response = await dio.get('$endpoint/recipes');
 
     if (response.statusCode != 200) return null;
 
-    var parsed = json.decode(response.body)['recipes'] as List<dynamic>;
-
-    for (var recipe in parsed) {
+    for (var recipe in response.data['recipes']) {
       recipes.add(Recipe.fromJson(recipe));
     }
 

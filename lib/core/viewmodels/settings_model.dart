@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:laravel_forge/core/enums/viewsate.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../constants.dart';
+import '../../locator.dart';
 import 'base_model.dart';
 
 class SettingsModel extends BaseModel {

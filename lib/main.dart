@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:laravel_forge/ui/router.dart';
 import 'package:provider/provider.dart';
+import 'constants.dart';
 import 'core/models/user.dart';
 import 'core/services/authentication_service.dart';
 import 'locator.dart';
@@ -16,13 +17,18 @@ class MyApp extends StatelessWidget {
     return StreamProvider<User>(
       initialData: User.initial(),
       builder: (context) => locator<AuthenticationService>().userController,
-      child: MaterialApp(
-        title: 'Laravel Forge',
-        theme: ThemeData(
-          primarySwatch: Colors.green,
+      child: WillPopScope(
+        onWillPop: () async => false,
+        child: MaterialApp(
+          title: 'Laravel Forge',
+          theme: ThemeData(
+            primarySwatch: Colors.green,
+          ),
+          initialRoute: initialRoute,
+          onGenerateRoute: Router.generateRoute,
+          navigatorKey: navigatorKey,
+          routes: Router.routes,
         ),
-        initialRoute: 'login',
-        onGenerateRoute: Router.generateRoute,
       ),
     );
   }
