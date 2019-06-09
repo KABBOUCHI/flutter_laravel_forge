@@ -14,7 +14,7 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return StreamProvider<User>(
+    return StreamProvider<User>.controller(
       initialData: User.initial(),
       builder: (context) => locator<AuthenticationService>().userController,
       child: WillPopScope(
