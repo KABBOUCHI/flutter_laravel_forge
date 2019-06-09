@@ -48,6 +48,9 @@ class LoginModel extends BaseModel {
 
     if (token != null) {
       success = await _authenticationService.login(token);
+      if (success == false) {
+        prefs.remove(FORGE_TOKEN_KEY);
+      }
     }
 
     setState(ViewState.Idle);
