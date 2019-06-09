@@ -44,9 +44,7 @@ void setupLocator() {
           },
           onError: (DioError e) {
             if (e.response.statusCode == 401) {
-              if (loginRoute.isCurrent == false) {
-                navigatorKey.currentState.pushReplacementNamed('login');
-              }
+              navigatorKey.currentState.pushReplacementNamed(Routes.login);
             }
             return e;
           },

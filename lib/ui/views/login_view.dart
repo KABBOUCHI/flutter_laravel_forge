@@ -3,6 +3,7 @@ import 'package:laravel_forge/core/enums/viewsate.dart';
 import 'package:laravel_forge/core/viewmodels/login_model.dart';
 import 'package:laravel_forge/ui/shared/app_colors.dart';
 import 'package:laravel_forge/ui/widgets/login_header.dart';
+import '../router.dart';
 import 'base_view.dart';
 
 class LoginView extends StatefulWidget {
@@ -22,7 +23,7 @@ class _LoginViewState extends State<LoginView> {
           setState(() {
             changingRouteOnStart = true;
           });
-          Navigator.pushReplacementNamed(context, '/');
+          Navigator.pushReplacementNamed(context, Routes.home);
         }
       },
       builder: (context, model, child) => Scaffold(
@@ -50,7 +51,7 @@ class _LoginViewState extends State<LoginView> {
                                     await model.login(_controller.text);
                                 if (loginSuccess) {
                                   Navigator.of(context, rootNavigator: true)
-                                      .pushReplacementNamed('/');
+                                      .pushReplacementNamed(Routes.home);
                                 }
                               },
                             )

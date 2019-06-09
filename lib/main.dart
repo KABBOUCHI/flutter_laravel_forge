@@ -25,7 +25,6 @@ class MyApp extends StatelessWidget {
             primarySwatch: Colors.green,
           ),
           initialRoute: initialRoute,
-          onGenerateRoute: Router.generateRoute,
           navigatorKey: navigatorKey,
           routes: Router.routes,
         ),

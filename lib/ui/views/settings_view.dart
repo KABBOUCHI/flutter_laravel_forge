@@ -33,7 +33,7 @@ class _SettingsViewState extends State<SettingsView> {
                   onPressed: () async {
                     await model.logout();
                     Navigator.of(context, rootNavigator: true)
-                        .pushReplacementNamed('login');
+                        .pushReplacementNamed(Routes.login);
                   },
                 )
               ],
