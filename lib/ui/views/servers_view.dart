@@ -3,7 +3,9 @@ import 'package:laravel_forge/core/enums/viewsate.dart';
 import 'package:laravel_forge/core/models/server.dart';
 import 'package:laravel_forge/core/viewmodels/servers_model.dart';
 import 'package:laravel_forge/ui/shared/loading_indicator.dart';
+import 'package:provider/provider.dart';
 
+import '../../locator.dart';
 import 'base_view.dart';
 
 class ServersView extends StatefulWidget {
@@ -22,6 +24,7 @@ class _ServersViewState extends State<ServersView> {
               children: List.generate(
                 model.servers.length,
                 (i) => ServerCard(
+                      model: model,
                       server: model.servers[i],
                     ),
               ),
@@ -30,10 +33,18 @@ class _ServersViewState extends State<ServersView> {
   }
 }
 
-class ServerCard extends StatelessWidget {
+class ServerCard extends StatefulWidget {
   final Server server;
+  final ServersModel model;
 
-  ServerCard({this.server});
+  ServerCard({this.server, this.model});
+
+  @override
+  _ServerCardState createState() => _ServerCardState();
+}
+
+class _ServerCardState extends State<ServerCard> {
+  bool _serverRefreshing = false;
 
   @override
   Widget build(BuildContext context) {
@@ -52,21 +63,49 @@ class ServerCard extends StatelessWidget {
             color: Color(0xffebeced),
             child: Row(
               children: <Widget>[
-                Icon(
-                  Icons.check_circle,
-                  color: Colors.green,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 8.0),
-                  child: Text("Active"),
-                ),
+                if (_serverRefreshing == false) ...[
+                  Icon(
+                    Icons.check_circle,
+                    color: Colors.green,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8.0),
+                    child: Text("Active"),
+                  ),
+                ],
+                if (_serverRefreshing)
+                  Container(
+                    width: IconTheme.of(context).size,
+                    height: IconTheme.of(context).size,
+                    child: CircularProgressIndicator(),
+                  ),
                 Expanded(
                   child: Container(),
                 ),
                 PopupMenuButton(
+                  onSelected: (result) async {
+                    switch (result) {
+                      case 0:
+                        setState(() {
+                          _serverRefreshing = true;
+                        });
+                        await widget.model.refreshServer(widget.server);
+                        setState(() {
+                          _serverRefreshing = false;
+                        });
+                        break;
+                      case 1:
+                        widget.model.rebootServer(widget.server);
+                        break;
+                      case 2:
+                        break;
+                      default:
+                    }
+                  },
                   itemBuilder: (context) {
                     return [
                       PopupMenuItem(
+                        value: 0,
                         child: new Row(
                           children: <Widget>[
                             Padding(
@@ -81,6 +120,7 @@ class ServerCard extends StatelessWidget {
                         ),
                       ),
                       PopupMenuItem(
+                        value: 1,
                         child: new Row(
                           children: <Widget>[
                             Padding(
@@ -95,6 +135,7 @@ class ServerCard extends StatelessWidget {
                         ),
                       ),
                       PopupMenuItem(
+                        value: 2,
                         child: new Row(
                           children: <Widget>[
                             Padding(
@@ -126,7 +167,7 @@ class ServerCard extends StatelessWidget {
                 ServerCardInfo(
                   'Name',
                   Text(
-                    server.name,
+                    widget.server.name,
                     style: new TextStyle(
                       color: Color(0Xff424c54),
                       fontWeight: FontWeight.w400,
@@ -136,7 +177,7 @@ class ServerCard extends StatelessWidget {
                 ServerCardInfo(
                   'Region',
                   Text(
-                    server.region,
+                    widget.server.region,
                     style: new TextStyle(
                       color: Color(0Xff424c54),
                       fontWeight: FontWeight.w400,
@@ -146,7 +187,7 @@ class ServerCard extends StatelessWidget {
                 ServerCardInfo(
                   'Size',
                   Text(
-                    server.size,
+                    widget.server.size,
                     style: new TextStyle(
                       color: Color(0Xff424c54),
                       fontWeight: FontWeight.w400,
@@ -156,7 +197,7 @@ class ServerCard extends StatelessWidget {
                 ServerCardInfo(
                   'PHP Version',
                   Text(
-                    server.php_version,
+                    widget.server.php_version,
                     style: new TextStyle(
                       color: Color(0Xff424c54),
                       fontWeight: FontWeight.w400,
@@ -166,7 +207,7 @@ class ServerCard extends StatelessWidget {
                 ServerCardInfo(
                   "IP Address",
                   Text(
-                    server.ip_address,
+                    widget.server.ip_address,
                     style: new TextStyle(
                       color: Color(0Xff424c54),
                       fontWeight: FontWeight.w400,

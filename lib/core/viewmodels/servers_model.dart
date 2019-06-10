@@ -18,4 +18,15 @@ class ServersModel extends BaseModel {
     _servers = await _api.getServers();
     setState(ViewState.Idle);
   }
+
+  void rebootServer(Server server) async {
+    await _api.rebootServer(server.id);
+  }
+
+  Future refreshServer(Server server) async {
+    var _server = await _api.getServer(server.id);
+    var index = _servers.indexWhere((s) => s.id == server.id);
+    _servers[index] = _server;
+    notifyListeners();
+  }
 }

@@ -64,4 +64,18 @@ class Api {
 
     return recipes;
   }
+
+  Future<bool> rebootServer(int id) async {
+    var response = await dio.post('$endpoint/servers/$id/reboot');
+
+    return response.statusCode == 200;
+  }
+
+  Future<Server> getServer(int id) async {
+    var response = await dio.get('$endpoint/servers/$id');
+
+    if (response.statusCode != 200) return null;
+
+    return Server.fromJson(response.data['server']);
+  }
 }
