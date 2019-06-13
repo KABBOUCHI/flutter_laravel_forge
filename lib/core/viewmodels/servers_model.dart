@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:laravel_forge/core/enums/viewsate.dart';
 import 'package:laravel_forge/core/models/server.dart';
+import 'package:laravel_forge/core/models/site.dart';
 import 'package:laravel_forge/core/services/api.dart';
 
 import '../../locator.dart';
@@ -28,5 +29,13 @@ class ServersModel extends BaseModel {
     var index = _servers.indexWhere((s) => s.id == server.id);
     _servers[index] = _server;
     notifyListeners();
+  }
+
+  Future<List<Site>> getSites(Server server) async {
+    setState(ViewState.Busy);
+    List<Site> _sites;
+    _sites = await _api.getSites(server.id);
+    setState(ViewState.Idle);
+    return _sites;
   }
 }

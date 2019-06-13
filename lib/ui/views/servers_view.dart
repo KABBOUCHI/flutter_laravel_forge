@@ -24,9 +24,9 @@ class _ServersViewState extends State<ServersView> {
               children: List.generate(
                 model.servers.length,
                 (i) => ServerCard(
-                      model: model,
-                      server: model.servers[i],
-                    ),
+                  model: model,
+                  server: model.servers[i],
+                ),
               ),
             ),
     );
@@ -98,6 +98,11 @@ class _ServerCardState extends State<ServerCard> {
                         widget.model.rebootServer(widget.server);
                         break;
                       case 2:
+                        Navigator.pushNamed(
+                          context,
+                          '/server',
+                          arguments: widget.server,
+                        );
                         break;
                       default:
                     }

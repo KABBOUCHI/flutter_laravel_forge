@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:laravel_forge/core/models/recipe.dart';
 import 'package:laravel_forge/core/models/server.dart';
+import 'package:laravel_forge/core/models/site.dart';
 import 'package:laravel_forge/core/models/user.dart';
 import 'package:laravel_forge/locator.dart';
 
@@ -77,5 +78,19 @@ class Api {
     if (response.statusCode != 200) return null;
 
     return Server.fromJson(response.data['server']);
+  }
+
+  Future<List<Site>> getSites(int id) async {
+    var sites = List<Site>();
+
+    var response = await dio.get('$endpoint/servers/$id/sites');
+
+    if (response.statusCode != 200) return null;
+
+    for (var site in response.data['sites']) {
+      sites.add(Site.fromJson(site));
+    }
+
+    return sites;
   }
 }
