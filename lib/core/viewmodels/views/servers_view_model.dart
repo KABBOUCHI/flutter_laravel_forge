@@ -1,23 +1,26 @@
 import 'dart:async';
 
-import 'package:laravel_forge/core/enums/viewsate.dart';
+import 'package:flutter/widgets.dart';
 import 'package:laravel_forge/core/models/server.dart';
 import 'package:laravel_forge/core/models/site.dart';
 import 'package:laravel_forge/core/services/api.dart';
+import 'package:laravel_forge/core/viewmodels/base_model.dart';
 
-import '../../locator.dart';
-import 'base_model.dart';
+class ServersViewModel extends BaseModel {
+  Api _api;
 
-class ServersModel extends BaseModel {
-  Api _api = locator<Api>();
+  ServersViewModel({
+    @required Api api,
+  }) : _api = api;
+
   List<Server> _servers = new List();
 
   List<Server> get servers => _servers;
 
   Future getServers() async {
-    setState(ViewState.Busy);
+    setBusy(true);
     _servers = await _api.getServers();
-    setState(ViewState.Idle);
+    setBusy(false);
   }
 
   void rebootServer(Server server) async {
@@ -32,10 +35,10 @@ class ServersModel extends BaseModel {
   }
 
   Future<List<Site>> getSites(Server server) async {
-    setState(ViewState.Busy);
+    setBusy(true);
     List<Site> _sites;
     _sites = await _api.getSites(server.id);
-    setState(ViewState.Idle);
+    setBusy(false);
     return _sites;
   }
 }

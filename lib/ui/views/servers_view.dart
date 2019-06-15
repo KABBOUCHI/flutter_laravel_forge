@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:laravel_forge/core/enums/viewsate.dart';
 import 'package:laravel_forge/core/models/server.dart';
-import 'package:laravel_forge/core/viewmodels/servers_model.dart';
+import 'package:laravel_forge/core/viewmodels/views/servers_view_model.dart';
 import 'package:laravel_forge/ui/shared/loading_indicator.dart';
+import 'package:laravel_forge/ui/views/base_widget.dart';
 import 'package:provider/provider.dart';
-
-import '../../locator.dart';
-import 'base_view.dart';
 
 class ServersView extends StatefulWidget {
   @override
@@ -16,15 +13,15 @@ class ServersView extends StatefulWidget {
 class _ServersViewState extends State<ServersView> {
   @override
   Widget build(BuildContext context) {
-    return BaseView<ServersModel>(
+    return BaseWidget<ServersViewModel>(
+      model: ServersViewModel(api: Provider.of(context)),
       onModelReady: (model) => model.getServers(),
-      builder: (context, model, child) => model.state == ViewState.Busy
+      builder: (context, model, child) => model.busy
           ? loadingIndicator()
           : ListView(
               children: List.generate(
                 model.servers.length,
                 (i) => ServerCard(
-                  model: model,
                   server: model.servers[i],
                 ),
               ),
@@ -35,9 +32,8 @@ class _ServersViewState extends State<ServersView> {
 
 class ServerCard extends StatefulWidget {
   final Server server;
-  final ServersModel model;
 
-  ServerCard({this.server, this.model});
+  ServerCard({this.server});
 
   @override
   _ServerCardState createState() => _ServerCardState();
@@ -45,9 +41,9 @@ class ServerCard extends StatefulWidget {
 
 class _ServerCardState extends State<ServerCard> {
   bool _serverRefreshing = false;
-
   @override
   Widget build(BuildContext context) {
+    final ServersViewModel model = Provider.of(context);
     return Card(
       margin: EdgeInsets.all(10.0),
       child: Column(
@@ -89,13 +85,13 @@ class _ServerCardState extends State<ServerCard> {
                         setState(() {
                           _serverRefreshing = true;
                         });
-                        await widget.model.refreshServer(widget.server);
+                        await model.refreshServer(widget.server);
                         setState(() {
                           _serverRefreshing = false;
                         });
                         break;
                       case 1:
-                        widget.model.rebootServer(widget.server);
+                        model.rebootServer(widget.server);
                         break;
                       case 2:
                         Navigator.pushNamed(

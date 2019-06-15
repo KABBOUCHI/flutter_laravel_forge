@@ -1,26 +1,28 @@
 import 'dart:async';
 
-import 'package:laravel_forge/core/enums/viewsate.dart';
+import 'package:flutter/widgets.dart';
 import 'package:laravel_forge/core/services/authentication_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../constants.dart';
-import '../../locator.dart';
-import 'base_model.dart';
+import '../../../constants.dart';
+import '../base_model.dart';
 
-class LoginModel extends BaseModel {
-  final AuthenticationService _authenticationService =
-      locator<AuthenticationService>();
+class LoginViewModel extends BaseModel {
+  AuthenticationService _authenticationService;
+
+  LoginViewModel({
+    @required AuthenticationService authenticationService,
+  }) : _authenticationService = authenticationService;
 
   String errorMessage;
 
   Future<bool> login(String token) async {
     errorMessage = null;
-    setState(ViewState.Busy);
+    setBusy(true);
 
     if (token == null || token == '') {
       errorMessage = 'Token is required';
-      setState(ViewState.Idle);
+      setBusy(false);
       return false;
     }
     bool success = false;
@@ -34,13 +36,12 @@ class LoginModel extends BaseModel {
       errorMessage = 'Token is invalid';
     }
 
-    setState(ViewState.Idle);
+    setBusy(false);
     return success;
   }
 
   Future<bool> checkAuth() async {
-    setState(ViewState.Busy);
-
+    setBusy(true);
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String token = prefs.getString(FORGE_TOKEN_KEY);
 
@@ -53,7 +54,7 @@ class LoginModel extends BaseModel {
       }
     }
 
-    setState(ViewState.Idle);
+    setBusy(false);
     return success;
   }
 }

@@ -1,13 +1,11 @@
-import 'package:flutter/widgets.dart';
-import 'package:laravel_forge/core/enums/viewsate.dart';
+import 'package:flutter/material.dart';
 
 class BaseModel extends ChangeNotifier {
-  ViewState _state = ViewState.Idle;
+  bool _busy = false;
+  bool get busy => _busy;
 
-  ViewState get state => _state;
-
-  void setState(ViewState viewState) {
-    _state = viewState;
+  void setBusy(bool value) {
+    _busy = value;
     notifyListeners();
   }
 }

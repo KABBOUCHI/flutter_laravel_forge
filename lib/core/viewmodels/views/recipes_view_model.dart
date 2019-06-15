@@ -1,21 +1,23 @@
 import 'dart:async';
 
-import 'package:laravel_forge/core/enums/viewsate.dart';
+import 'package:flutter/widgets.dart';
 import 'package:laravel_forge/core/models/recipe.dart';
 import 'package:laravel_forge/core/services/api.dart';
 
-import '../../locator.dart';
-import 'base_model.dart';
+import '../base_model.dart';
 
-class RecipesModel extends BaseModel {
-  Api _api = locator<Api>();
+class RecipesViewModel extends BaseModel {
+  Api _api;
+
+  RecipesViewModel({@required Api api}) : _api = api;
+
   List<Recipe> _recipes = new List();
 
   List<Recipe> get recipes => _recipes;
 
   Future getRecipes() async {
-    setState(ViewState.Busy);
+    setBusy(true);
     _recipes = await _api.getRecipes();
-    setState(ViewState.Idle);
+    setBusy(false);
   }
 }

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:laravel_forge/core/enums/viewsate.dart';
-import 'package:laravel_forge/core/viewmodels/login_model.dart';
+import 'package:laravel_forge/core/viewmodels/views/login_view_model.dart';
 import 'package:laravel_forge/ui/shared/app_colors.dart';
 import 'package:laravel_forge/ui/shared/loading_indicator.dart';
 import 'package:laravel_forge/ui/widgets/login_header.dart';
+import 'package:provider/provider.dart';
 import '../router.dart';
-import 'base_view.dart';
+import 'base_widget.dart';
 
 class LoginView extends StatefulWidget {
   @override
@@ -17,7 +17,8 @@ class _LoginViewState extends State<LoginView> {
   bool changingRouteOnStart = false;
   @override
   Widget build(BuildContext context) {
-    return BaseView<LoginModel>(
+    return BaseWidget<LoginViewModel>(
+      model: LoginViewModel(authenticationService: Provider.of(context)),
       onModelReady: (model) async {
         var loginSuccess = await model.checkAuth();
         if (loginSuccess) {
@@ -28,37 +29,37 @@ class _LoginViewState extends State<LoginView> {
         }
       },
       builder: (context, model, child) => Scaffold(
-            backgroundColor: backgroundColor,
-            body: model.state == ViewState.Busy || changingRouteOnStart == true
-                ? loadingIndicator()
-                : Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      LoginHeader(
-                          validationMessage: model.errorMessage,
-                          controller: _controller),
-                      model.state == ViewState.Busy
-                          ? loadingIndicator()
-                          : FlatButton(
-                              color: Colors.green,
-                              child: Text(
-                                'Login',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                              onPressed: () async {
-                                var loginSuccess =
-                                    await model.login(_controller.text);
-                                if (loginSuccess) {
-                                  Navigator.pushReplacementNamed(
-                                    context,
-                                    Routes.home,
-                                  );
-                                }
-                              },
-                            )
-                    ],
-                  ),
-          ),
+        backgroundColor: backgroundColor,
+        body: model.busy || changingRouteOnStart == true
+            ? loadingIndicator()
+            : Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  LoginHeader(
+                      validationMessage: model.errorMessage,
+                      controller: _controller),
+                  model.busy
+                      ? loadingIndicator()
+                      : FlatButton(
+                          color: Colors.green,
+                          child: Text(
+                            'Login',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          onPressed: () async {
+                            var loginSuccess =
+                                await model.login(_controller.text);
+                            if (loginSuccess) {
+                              Navigator.pushReplacementNamed(
+                                context,
+                                Routes.home,
+                              );
+                            }
+                          },
+                        )
+                ],
+              ),
+      ),
     );
   }
 }

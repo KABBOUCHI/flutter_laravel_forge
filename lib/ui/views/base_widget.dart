@@ -1,34 +1,35 @@
 import 'package:flutter/material.dart';
-import 'package:laravel_forge/core/viewmodels/base_model.dart';
 import 'package:provider/provider.dart';
 
-import '../../locator.dart';
-
-class BaseView<T extends BaseModel> extends StatefulWidget {
+class BaseWidget<T extends ChangeNotifier> extends StatefulWidget {
   final Widget Function(BuildContext context, T model, Widget child) builder;
+  final T model;
+  final Widget child;
   final Function(T) onModelReady;
 
-  BaseView({this.builder, this.onModelReady});
+  BaseWidget({
+    Key key,
+    this.builder,
+    this.model,
+    this.child,
+    this.onModelReady,
+  }) : super(key: key);
 
-  @override
-  _BaseViewState<T> createState() => _BaseViewState<T>();
+  _BaseWidgetState<T> createState() => _BaseWidgetState<T>();
 }
 
-class _BaseViewState<T extends BaseModel> extends State<BaseView<T>> {
-  T model = locator<T>();
+class _BaseWidgetState<T extends ChangeNotifier> extends State<BaseWidget<T>> {
+  T model;
 
   @override
   void initState() {
+    model = widget.model;
+
     if (widget.onModelReady != null) {
       widget.onModelReady(model);
     }
-    super.initState();
-  }
 
-  @override
-  void dispose() {
-    super.dispose();
-    // model.dispose();
+    super.initState();
   }
 
   @override
@@ -37,6 +38,7 @@ class _BaseViewState<T extends BaseModel> extends State<BaseView<T>> {
       builder: (context) => model,
       child: Consumer<T>(
         builder: widget.builder,
+        child: widget.child,
       ),
     );
   }

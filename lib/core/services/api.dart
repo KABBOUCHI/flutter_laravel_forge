@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
@@ -7,12 +6,46 @@ import 'package:laravel_forge/core/models/recipe.dart';
 import 'package:laravel_forge/core/models/server.dart';
 import 'package:laravel_forge/core/models/site.dart';
 import 'package:laravel_forge/core/models/user.dart';
-import 'package:laravel_forge/locator.dart';
+import 'package:laravel_forge/ui/router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-/// The service responsible for networking requests
+import '../../constants.dart';
+
 class Api {
   static const endpoint = 'https://forge.laravel.com/api/v1';
-  Dio dio = locator<Dio>();
+  Dio dio;
+
+  Api() {
+    dio = new Dio()
+      ..options.headers = {
+        'Content-Type': 'application/json; charset=utf-8',
+        'Accept': 'application/json',
+      }
+      ..interceptors.add(
+        InterceptorsWrapper(
+          onRequest: (RequestOptions options) async {
+            var prefs = await SharedPreferences.getInstance();
+            var token = prefs.getString(FORGE_TOKEN_KEY);
+
+            if (token != null) {
+              options.headers
+                  .putIfAbsent('Authorization', () => "Bearer $token");
+            }
+
+            return options;
+          },
+          onResponse: (Response response) {
+            return response; // continue
+          },
+          onError: (DioError e) {
+            if (e.response.statusCode == 401) {
+              navigatorKey.currentState.pushReplacementNamed(Routes.login);
+            }
+            return e;
+          },
+        ),
+      );
+  }
 
   String token;
 

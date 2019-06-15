@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:laravel_forge/core/enums/viewsate.dart';
 import 'package:laravel_forge/core/models/server.dart';
 import 'package:laravel_forge/core/models/site.dart';
-import 'package:laravel_forge/core/viewmodels/servers_model.dart';
+import 'package:laravel_forge/core/viewmodels/views/servers_view_model.dart';
 import 'package:laravel_forge/ui/shared/loading_indicator.dart';
-
-import 'base_view.dart';
+import 'package:laravel_forge/ui/views/base_widget.dart';
+import 'package:provider/provider.dart';
 
 class ServerView extends StatefulWidget {
   final Server server;
@@ -21,7 +20,8 @@ class _ServerViewState extends State<ServerView> {
 
   @override
   Widget build(BuildContext context) {
-    return BaseView<ServersModel>(
+    return BaseWidget<ServersViewModel>(
+      model: ServersViewModel(api: Provider.of(context)),
       onModelReady: (model) async {
         _sites = await model.getSites(widget.server);
       },
@@ -32,7 +32,7 @@ class _ServerViewState extends State<ServerView> {
             style: new TextStyle(color: Colors.white),
           ),
         ),
-        body: model.state == ViewState.Busy
+        body: model.busy
             ? loadingIndicator()
             : ListView.builder(
                 itemCount: _sites.length,
