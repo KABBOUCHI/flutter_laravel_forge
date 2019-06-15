@@ -14,7 +14,7 @@ class Server {
   String createdAt;
   bool isReady;
   List<Tags> tags;
-  List<String> network;
+  List<int> network;
 
   Server(
       {this.id,
@@ -55,7 +55,7 @@ class Server {
         tags.add(new Tags.fromJson(v));
       });
     }
-    network = json['network'].cast<String>();
+    network = json['network'].cast<int>();
   }
 
   Map<String, dynamic> toJson() {
