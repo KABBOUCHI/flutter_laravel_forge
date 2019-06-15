@@ -198,7 +198,7 @@ class _ServerCardState extends State<ServerCard> {
                 ServerCardInfo(
                   'PHP Version',
                   Text(
-                    widget.server.php_version,
+                    widget.server.phpVersion,
                     style: new TextStyle(
                       color: Color(0Xff424c54),
                       fontWeight: FontWeight.w400,
@@ -208,7 +208,7 @@ class _ServerCardState extends State<ServerCard> {
                 ServerCardInfo(
                   "IP Address",
                   Text(
-                    widget.server.ip_address,
+                    widget.server.ipAddress,
                     style: new TextStyle(
                       color: Color(0Xff424c54),
                       fontWeight: FontWeight.w400,

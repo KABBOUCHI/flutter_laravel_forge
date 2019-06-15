@@ -3,16 +3,16 @@ class Recipe {
   String name;
   String user;
   String script;
-  String created_at;
+  String createdAt;
 
-  Recipe({this.id, this.name, this.user, this.script, this.created_at});
+  Recipe({this.id, this.name, this.user, this.script, this.createdAt});
 
   Recipe.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];
     user = json['user'];
     script = json['script'];
-    created_at = json['created_at'];
+    createdAt = json['created_at'];
   }
 
   Map<String, dynamic> toJson() {
@@ -21,7 +21,7 @@ class Recipe {
     data['name'] = this.name;
     data['user'] = this.user;
     data['script'] = this.script;
-    data['created_at'] = this.created_at;
+    data['created_at'] = this.createdAt;
     return data;
   }
 }
